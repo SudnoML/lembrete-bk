@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lembrete BK G2</title>
+</head>
+<body>
+<script>
+// ===== CONFIGURAÇÕES =====
+const TITULO = "Responder pesquisa BK G2 📋";
+const DESCRICAO = "Olá BKlover! Queremos saber o que podemos mudar e o que te faz retornar sempre em nossa loja :)\\n\\nPara fazer nossa pesquisa siga o passo a passo:\\n1. Entre no seu email cadastrado no aplicativo\\n2. Pesquise \"BK\" na barra de pesquisa\\n3. Procure o email com a frase: \"BK quer te ouvir!\"\\n4. Clique e faça sua avaliação :)\\n\\nAh! Essa pesquisa nos ajuda muito a saber como você cliente se sente em nossa loja.\\n\\nAtenciosamente, Equipe BK G2 :)";
+// =========================
+
+function gerarICS() {
+  const agora = new Date();
+  const evento = new Date(agora.getTime() + 24 * 60 * 60 * 1000); // +24h
+
+  // Formata data no padrão UTC do iCal: YYYYMMDDTHHMMSSZ
+  function fmt(d) {
+    return d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+  }
+
+  const dtStart = fmt(evento);
+  const dtStamp = fmt(agora);
+
+  const ics = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//BK G2//Pesquisa//PT-BR",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    "BEGIN:VEVENT",
+    "UID:" + Date.now() + "@bkg2.pesquisa",
+    "DTSTAMP:" + dtStamp,
+    "DTSTART:" + dtStart,
+    "DTEND:" + fmt(new Date(evento.getTime() + 30 * 60 * 1000)),
+    "SUMMARY:" + TITULO,
+    "DESCRIPTION:" + DESCRICAO.replace(/\n/g, "\\n"),
+    "BEGIN:VALARM",
+    "TRIGGER:PT0M", // alarme no horário do evento
+    "ACTION:DISPLAY",
+    "DESCRIPTION:" + TITULO,
+    "END:VALARM",
+    "END:VEVENT",
+    "END:VCALENDAR"
+  ].join("\r\n");
+
+  // Cria o arquivo e baixa/abre
+  const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+
+  // Redireciona pro arquivo .ics (abre o calendário do celular)
+  window.location.href = url;
+}
+
+gerarICS();
+</script>
+</body>
+</html>
