@@ -16,11 +16,18 @@ function gerarICS() {
   const agora = new Date();
   const evento = new Date(agora.getTime() + 24 * 60 * 60 * 1000); // +24h
 
-  // Formata data no padrão UTC do iCal: YYYYMMDDTHHMMSSZ
+  // Formata data no fuso LOCAL (Brasil) — sem converter pra UTC
   function fmt(d) {
-    return d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+    const pad = (n) => String(n).padStart(2, "0");
+    return d.getFullYear() +
+      pad(d.getMonth() + 1) +
+      pad(d.getDate()) + "T" +
+      pad(d.getHours()) +
+      pad(d.getMinutes()) +
+      pad(d.getSeconds());
   }
 
+  // Usa fuso local do Brasil (sem Z no final)
   const dtStart = fmt(evento);
   const dtStamp = fmt(agora);
 
